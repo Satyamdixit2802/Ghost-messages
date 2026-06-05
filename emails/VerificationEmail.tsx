@@ -1,14 +1,14 @@
 import { Body, Button, Container, Head, Heading, Html, Img, Preview, Section, Tailwind, Text } from 'react-email';
 
-interface WelcomeEmailProps {
+interface VerificationEmailProps {
   username?: string;
   otp?: string;
 }
 
-const WelcomeEmail = ({
+ const VerificationEmail  = ({
   username = 'Nicole',
   otp = '5663636',
-}: WelcomeEmailProps) => {
+}: VerificationEmailProps) => {
   const previewText = `Welcome  ${username}!`;
 
   return (
@@ -53,4 +53,4 @@ const WelcomeEmail = ({
   );
 };
 
-export default WelcomeEmail;
+export default VerificationEmail;

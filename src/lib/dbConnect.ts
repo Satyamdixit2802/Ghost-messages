@@ -1,4 +1,4 @@
-import { log } from "console";
+
 import mongoose from "mongoose";
 
 type ConnectionObject = {
@@ -15,10 +15,10 @@ async function dbConnect() : Promise<void>{
     try {
        const db =  await mongoose.connect(process.env.MONGODB_URI || '' ,{})
          connection.isConnected = db.connections[0].readyState;
-         log("Connected to database successfully");
+         console.log("Connected to database successfully",connection.isConnected);
         
     } catch (error) {
-        log("Error connecting to database:",error);
+        console.log("Error connecting to database:",error);
         process.exit(1)
     }
 }
