@@ -3,7 +3,7 @@ import UserModel from '@/models/User.model'
 import bcrypt from 'bcryptjs'
 
 import {sendVerificationEmail} from '@/helper/sendEmailVerification'
-import { success } from 'zod';
+
 
 
 export async function POST (req: Request){
