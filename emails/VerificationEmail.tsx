@@ -6,8 +6,8 @@ interface VerificationEmailProps {
 }
 
  const VerificationEmail  = ({
-  username = 'Nicole',
-  otp = '5663636',
+  username ,
+  otp ,
 }: VerificationEmailProps) => {
   const previewText = `Welcome  ${username}!`;
 
