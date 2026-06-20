@@ -7,11 +7,23 @@ import {sendVerificationEmail} from '@/helper/sendEmailVerification'
 
 
 
-export async function POST (req: Request){
+export async function POST (request: Request){
+
+    if(request.method !=='POST'){
+        return Response.json(
+            {
+                success : false,
+                message : 'Method not allowed'
+            },
+            {
+                status : 405
+            }
+        )
+    }
     await dbConnect()
 
     try {
-        const {username, email, password} =   await req.json()
+        const {username, email, password} =   await request.json()
         const existingUserVerifiedByUsername = await UserModel.findOne({
             username,
             isVerified:true

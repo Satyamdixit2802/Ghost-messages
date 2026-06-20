@@ -1,26 +1,34 @@
-import { resend } from "@/lib/resend";
+import { jsx } from "react/jsx-runtime";
 
- import VerificationEmail from '../../emails/VerificationEmail'
+import VerificationEmail from "../../emails/VerificationEmail";
 
- import { ApiResponse } from "@/types/ApiResponses";
+import { resend, resendFrom, resendReplyTo } from "@/lib/resend";
+import { ApiResponse } from "@/types/ApiResponses";
 
- export async function sendVerificationEmail(
-     email :string,
-    username:string,
-    verifyCode: string
-
- ): Promise <ApiResponse>{
-    try {
-        await resend.emails.send({
-      from: '<onboarding@resend.dev>',
+export async function sendVerificationEmail(
+  email: string,
+  username: string,
+  verifyCode: string
+): Promise<ApiResponse> {
+  try {
+    const { error } = await resend.emails.send({
+      from: resendFrom,
       to: email,
-      subject: 'Mystry Message | Verification Code',
-      react: VerificationEmail({username,otp:verifyCode}),
+      replyTo: resendReplyTo,
+      subject: "Mystery Message | Verification Code",
+      react: jsx(VerificationEmail, { username, otp: verifyCode }),
     });
-        return { success:true , message: "Verification email sent sucessfully"}
-    } catch (emailError) {
-        console.error("Error sending verification email",emailError)
-        return { success:false , message: "Failed to send verification email"}
 
+    if (error) {
+      throw new Error(error.message);
     }
- }
+
+    return { success: true, message: "Verification email sent successfully" };
+  } catch (emailError) {
+    const message =
+      emailError instanceof Error ? emailError.message : String(emailError);
+
+    console.error("Error sending verification email", emailError);
+    return { success: false, message };
+  }
+}
