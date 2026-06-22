@@ -1,11 +1,9 @@
 import {NextAuthOptions} from "next-auth"
-
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import dbConnect from '@/lib/dbConnect'
 import UserModel from '@/models/User.model'
-import GoogleProvider from 'next-auth/providers/google'
-import { email } from "better-auth";
+
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -13,15 +11,19 @@ export const authOptions: NextAuthOptions = {
       id: "credentials",
       name: "Credentials",
       credentials: {
+        username : {label : "username", type :"text"},
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials: any): Promise<any> {
+      async authorize(credentials): Promise<any | null> {
         await dbConnect()
 
         try {
-            const user  = await UserModel.findOne({
-                $or : [ {email : credentials.identifier}, {username : credentials.identifier}]
+            if(!credentials?.email || !credentials?.password){
+                throw new Error("Email and password are required")
+            }
+            const user = await UserModel.findOne({
+                $or : [ {email : credentials.email}, {username : credentials.username}]
             })
 
             if(!user){
@@ -31,15 +33,15 @@ export const authOptions: NextAuthOptions = {
             if(!user.isVerified){
                 throw new Error("Please verify your account before login ")
             }
-            const isPasswordVerified = await bcrypt.compare(credentials.password,user.password)
+            const isPasswordVerified = await bcrypt.compare(credentials.password, user.password)
             if(isPasswordVerified){
                 return user
             }else {
                 throw new Error('Incorrect password')
             }
             
-        } catch (error : any) {
-            throw new Error(error)
+        } catch (error) {
+            throw new Error(error instanceof Error ? error.message : String(error))
         }
       }
     })
