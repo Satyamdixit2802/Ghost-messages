@@ -2,7 +2,7 @@ import Usermodel from '@/models/User.model'
 import dbConnect from '@/lib/dbConnect'
 
 import {Message} from '@/models/User.model'
-import { success } from 'better-auth';
+
 
 
 export async function POST (request : Request){
@@ -39,7 +39,7 @@ export async function POST (request : Request){
          return Response.json(
             {
                 success : true,
-                message : "message sent succesfully"
+                message : "message sent successful"
             },{
                 status : 201
             }
