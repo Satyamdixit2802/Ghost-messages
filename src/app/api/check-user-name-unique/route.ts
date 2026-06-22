@@ -1,9 +1,9 @@
 import dbconnect from "@/lib/dbConnect";
 import UserModel from "@/models/User.model";
-import { success, z } from "zod";
+
 
 import { usernameValidation } from "@/Schemas/signUpSchema";
-import { error } from "next/dist/build/output/log";
+
 
 
 const UsernameQuerySchema = z.object({
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
    const result =  UsernameQuerySchema.safeParse(queryParam);
    if(!result.success){
     const usernameError = result.error.format();
-    usernameError?._errors || [];
+    usernameError?._errors  || [];
     return Response.json(
         {
             success : false,
